@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>@model.title</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+    <div id="mtLoader" class="backdrop">
+        <div class="lds-dual-ring"></div>
+    </div>
+    <div class="content">
+        @html.block('view')
+    </div>
+
+    <script type="text/javascript">
+        function showLoader() {
+            var loader = document.getElementById("mtLoader");
+            loader.style.display = "";
+        }
+        function hideLoader() {
+            var loader = document.getElementById("mtLoader");
+            loader.style.display = "none";
+        }
+        showLoader();
+
+        window.addEventListener("load", function () {
+            hideLoader();
+        });
+    </script>
+</body>
+</html>

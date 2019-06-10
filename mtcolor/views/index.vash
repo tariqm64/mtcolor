@@ -1,0 +1,36 @@
+﻿<h1>Colors, Shades and Tints</h1>
+
+@html.extend('mainlayout', function(model){
+    @html.block('view', function(model){
+        @model.colorBoxes.forEach(function(cb){
+            <div class="color-wrapper">
+                <div class="color-box">
+                    <div class="text">@cb.colorName</div>
+                    <div class="color" style="background-color:#@cb.colorHex"></div>
+                    <div class="text">#@cb.colorHex</div>
+                </div>
+                @if(cb.shades != null && cb.shades.length > 0){
+                    <div>
+                        @cb.shades.forEach(function(s){
+                        <div class="color-box">
+                            <div class="color" style="background-color:#@s"></div>
+                            <div class="text">#@s</div>
+                        </div>
+                        })
+                    </div>
+                }
+                @if(cb.tints != null && cb.tints.length > 0){
+                    <div>
+                        @cb.tints.forEach(function(t){
+                        <div class="color-box">
+                            <div class="color" style="background-color:#@t"></div>
+                            <div class="text">#@t</div>
+                        </div>
+                        })
+                    </div>
+                }
+            </div>
+            <hr />
+        })
+    })
+})

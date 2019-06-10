@@ -1,0 +1,19 @@
+{
+  "name": "mangotally",
+  "version": "0.0.0",
+  "description": "mangotally",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.14"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "gulp": "^4.0.2",
+    "gulp-less": "^4.0.1",
+    "less": "^3.9.0",
+    "vash": "^0.12.6"
+  }
+}
