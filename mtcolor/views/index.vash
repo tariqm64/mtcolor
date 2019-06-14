@@ -1,36 +1,152 @@
-﻿<h1>Colors, Shades and Tints</h1>
-
-@html.extend('mainlayout', function(model){
+﻿@html.extend('mainlayout', function(model){
     @html.block('view', function(model){
+        <h1>Colors, Shades and Tints</h1>
+        <div style="text-align:center;margin-bottom:50px;">
+            <div>
+                <canvas id="cnvs" width="300" height="300" class="color-palette">
+                    Your browser does not support canvas
+                </canvas>
+                <div id="colorSelected" class="color-selected"></div>
+            </div>
+            <div style="font-size:2em;">
+                <input id="paletteColor" type="text" placeholder="Hex Color" value="" />
+            </div>
+        </div>
+
+
         @model.colorBoxes.forEach(function(cb){
             <div class="color-wrapper">
-                <div class="color-box">
-                    <div class="text">@cb.colorName</div>
+                <div class="color-box" onclick="copyText(this)">
+                    <div >@cb.colorName</div>
                     <div class="color" style="background-color:#@cb.colorHex"></div>
-                    <div class="text">#@cb.colorHex</div>
+                    <input type="text" class="text" value="#@cb.colorHex" />
                 </div>
                 @if(cb.shades != null && cb.shades.length > 0){
-                    <div>
-                        @cb.shades.forEach(function(s){
-                        <div class="color-box">
-                            <div class="color" style="background-color:#@s"></div>
-                            <div class="text">#@s</div>
-                        </div>
-                        })
+                <div>
+                    @cb.shades.forEach(function(s){
+                    <div class="color-box" onclick="copyText(this)">
+                        <div class="color" style="background-color:#@s"></div>
+                        <input type="text" class="text" value="#@s" />
                     </div>
+                    })
+                </div>
                 }
                 @if(cb.tints != null && cb.tints.length > 0){
-                    <div>
-                        @cb.tints.forEach(function(t){
-                        <div class="color-box">
-                            <div class="color" style="background-color:#@t"></div>
-                            <div class="text">#@t</div>
-                        </div>
-                        })
+                <div>
+                    @cb.tints.forEach(function(t){
+                    <div class="color-box" onclick="copyText(this)">
+                        <div class="color" style="background-color:#@t"></div>
+                        <input type="text" class="text" value="#@t" />
                     </div>
+                    })
+                </div>
                 }
             </div>
             <hr />
         })
     })
 })
+
+<script type="text/javascript">
+    var canvas = document.getElementById("cnvs");
+    var c = document.getElementById("cnvs").getContext("2d");
+
+    var grd = c.createLinearGradient(0, 0, 300, 0);
+    var n = 1 / 6;
+    grd.addColorStop(n * 0, "red");
+    grd.addColorStop(n * 1, "yellow");
+    grd.addColorStop(n * 2, "green");
+    grd.addColorStop(n * 3, "cyan");
+    grd.addColorStop(n * 4, "blue");
+    grd.addColorStop(n * 5, "magenta");
+    grd.addColorStop(n * 6, "red");
+    c.fillStyle = grd;
+    c.fillRect(0, 0, 300, 300);
+
+    grd = c.createLinearGradient(0, 150, 0, 300);
+    grd.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    grd.addColorStop(1, 'rgba(0, 0, 0, 1)');
+    c.fillStyle = grd;
+    c.fillRect(0, 0, 300, 300);
+
+    grd = c.createLinearGradient(0, 150, 0, 0);
+    grd.addColorStop(0, 'rgba(255, 255, 255, 0)');
+    grd.addColorStop(1, 'rgba(255, 255, 255, 1)');
+    c.fillStyle = grd;
+    c.fillRect(0, 0, 300, 300);
+
+
+    canvas.addEventListener("mousedown", function () {
+        var inpt = document.getElementById("paletteColor");
+        var colorSelected = document.getElementById("colorSelected");
+
+        canvas.addEventListener("mousemove", pullColor);
+
+        function pullColor(e) {
+            var x = e.offsetX;
+            var y = e.offsetY
+
+            var ctx = canvas.getContext("2d");
+            var data = ctx.getImageData(x, y, 1, 1).data;
+            var r = data[0];
+            var g = data[1];
+            var b = data[2];
+
+            var hexInt = ((r << 16) | (g << 8) | b);
+            var hexString = hexInt.toString(16);
+            while (hexString.length < 6) {
+                hexString = "0" + hexString;
+            }
+            inpt.value = "#" + hexString;
+            colorSelected.style.backgroundColor = "#" + hexString;
+        }
+
+        canvas.addEventListener("mouseup", clearHandlers);
+        canvas.addEventListener("mouseout", clearHandlers);
+
+        function clearHandlers() {
+            canvas.removeEventListener("mousemove", pullColor);
+            canvas.removeEventListener("mouseup", clearHandlers);
+            canvas.removeEventListener("mouseout", clearHandlers);
+        }
+    });
+
+    function copyText(colorBox) {
+        var inpt;
+        for (var i = 0; i < colorBox.children.length; i++) {
+            var c = colorBox.children[i];
+            if (c.tagName.toLowerCase() == "input") {
+                inpt = c;
+            }
+        }
+        if (inpt == undefined)
+            return;
+        inpt.select();
+        document.execCommand("copy");
+        showTooltip(inpt, "Color copied to clipboard.")
+    }
+
+    function showTooltip(element, message) {
+        var tt = document.createElement("div");
+        tt.className = "tooltip";
+        tt.innerHTML = message;
+
+        element.parentElement.prepend(tt);
+
+        setInterval(fadeTooltip, 20);
+
+        function fadeTooltip() {
+            if (tt.style.opacity == "")
+                tt.style.opacity = "1";
+            if (tt.style.opacity > .75) {
+                tt.style.opacity -= .005;
+            } else {
+                tt.style.opacity -= .02;
+            }
+            if (tt.style.opacity <= 0) {
+                clearInterval(this);
+                tt.parentElement.removeChild(tt);
+            }
+        }
+    }
+</script>

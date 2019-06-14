@@ -32,6 +32,9 @@
     <Content Include="views\mainlayout.vash" />
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="classes\Color.ts" />
+    <TypeScriptCompile Include="classes\ColorBox.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="models\AllModels.ts" />
     <TypeScriptCompile Include="models\IndexModel.ts" />
     <TypeScriptCompile Include="models\MtModel.ts" />

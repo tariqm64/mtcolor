@@ -1,5 +1,5 @@
 ﻿import { MtModel } from "./MtModel";
-import { Color } from "./../classes/Color"
+import { ColorBox } from "../classes/ColorBox";
 
 export class IndexModel extends MtModel{
     public colorBoxes: Array<ColorBox>;
@@ -20,31 +20,3 @@ export class IndexModel extends MtModel{
         this.colorBoxes.push(new ColorBox("Brown", "A52A2A"));
     }
 };
-
-class ColorBox {
-    public colorName: string;
-    public colorHex: string;
-    public shades: Array<string>;
-    public tints: Array<string>;
-    constructor(colorName: string, colorHex: string){
-        this.colorName = colorName;
-        this.colorHex = colorHex;
-        if (colorHex.toLowerCase() != "000000")
-            this.buildShades();
-        if (colorHex.toLowerCase() != "ffffff")
-            this.buildTints();
-    }
-
-    private buildShades():void {
-        this.shades = [];
-        for (var i = .1; i <= .9; i += .1) {
-            this.shades.push(Color.fromHexString(this.colorHex).shade(i).getHexString());
-        }
-    }
-    private buildTints(): void {
-        this.tints = [];
-        for (var i = .1; i <= .9; i += .1) {
-            this.tints.push(Color.fromHexString(this.colorHex).tint(i).getHexString());
-        }
-    }
-}
