@@ -86,6 +86,16 @@
             var x = e.offsetX;
             var y = e.offsetY
 
+            if (x < 0)
+                x = 0;
+            if (x > 299)
+                x = 299;
+
+            if (y < 0)
+                y = 0;
+            if (y > 299)
+                y = 299;
+
             var ctx = canvas.getContext("2d");
             var data = ctx.getImageData(x, y, 1, 1).data;
             var r = data[0];
@@ -102,12 +112,12 @@
         }
 
         canvas.addEventListener("mouseup", clearHandlers);
-        canvas.addEventListener("mouseout", clearHandlers);
+        //canvas.addEventListener("mouseout", clearHandlers);
 
         function clearHandlers() {
             canvas.removeEventListener("mousemove", pullColor);
             canvas.removeEventListener("mouseup", clearHandlers);
-            canvas.removeEventListener("mouseout", clearHandlers);
+            //canvas.removeEventListener("mouseout", clearHandlers);
         }
     });
 
